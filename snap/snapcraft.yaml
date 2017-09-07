@@ -1,0 +1,26 @@
+name: duckdns-kyrofa
+version: '0.1'
+summary: Keep your DuckDNS records up-to-date
+description: |
+  This simple snap updates the configured DuckDNS domain names every five
+  minutes. Configure it by providing your token:
+
+      $ snap set duckdns-kyrofa token=<secret>
+
+  And configure your domain name list (comma-separated, no spaces):
+
+      $ snap set duckdns-kyrofa domains=domain1.com,domain2.com
+
+grade: stable
+confinement: strict
+
+apps:
+  duckdns:
+    command: duckdns
+    daemon: simple
+    plugs: [network]
+
+parts:
+  scripts:
+    plugin: dump
+    stage-packages: [curl]

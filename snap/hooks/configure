@@ -1,0 +1,4 @@
+#!/bin/sh
+
+
+# If we cared strongly, we could validate the token, or the domain names.

@@ -1,0 +1,30 @@
+#!/bin/sh
+
+while true; do
+	# First, get token
+	token=$(snapctl get token)
+
+	# Next, get list of domain names:
+	domains=$(snapctl get domains)
+
+	# Verify that both are somewhat valid:
+	if [ -z "$token" ]; then
+		echo "Waiting for a token to be configured" >&2
+	elif [ -z "$domains" ]; then
+		echo "Waiting for domains to be configured" >&2
+	else
+		# Config looks good, update the record
+		output=$(echo url="https://www.duckdns.org/update?domains=$domains&token=$token&ip=" | curl -s -K -)
+
+		# Don't print anything in the case of success, but handle errors.
+		if [ "$output" = "KO" ]; then
+			echo "Failed to update DNS record: please check your token and domains" >&2
+		elif [ "$output" != "OK" ]; then
+			echo "Unexpected response from DuckDNS: $output" >&2
+		fi
+	fi
+
+
+	# Run every 5 minutes
+	sleep 5m
+done
